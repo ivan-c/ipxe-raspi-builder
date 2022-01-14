@@ -1,0 +1,97 @@
+Author: Ivan Cvitkovic <icvitkovic@gmail.com>
+Description: Add autoboot script
+ Embed iPXE script into binary. iPXE script will display configuration information and call `autoboot`
+new file mode 100644
+--- /dev/null
++++ b/src/autoboot.ipxe
+@@ -0,0 +1,90 @@
++#!ipxe
++
++echo Dump before calling DHCP
++echo ========================================================
++echo ========================================================
++echo UUID: ${uuid}
++echo Manufacturer: ${manufacturer}
++echo Product name: ${product}
++echo Hostname: ${hostname}
++echo
++echo MAC address: ${net0/mac}
++echo IP address: ${net0/ip}
++echo IPv6 address: ${net0.ndp.0/ip6:ipv6}
++echo Netmask: ${net0/netmask}
++echo
++echo Gateway: ${gateway}
++echo DNS: ${dns}
++echo IPv6 DNS: ${dns6}
++echo Domain: ${domain}
++
++echo Next-server: ${next-server}
++echo Filename: ${filename}
++echo DHCP Option 54: ${54}
++echo DHCP Option 66: ${66}
++echo DHCP Option 67: ${67}
++echo ========================================================
++
++
++ifconf --configurator dhcp net0 && goto ipv4boot || goto ipv6boot
++
++
++:ipv4boot
++ echo ========================================================
++ echo UUID: ${uuid}
++ echo Manufacturer: ${manufacturer}
++ echo Product name: ${product}
++ echo Hostname: ${hostname}
++ echo
++ echo MAC address: ${net0/mac}
++ echo IP address: ${net0/ip}
++ echo IPv6 address: ${net0.ndp.0/ip6:ipv6}
++ echo Netmask: ${net0/netmask}
++ echo
++ echo Gateway: ${gateway}
++ echo DNS: ${dns}
++ echo IPv6 DNS: ${dns6}
++ echo Domain: ${domain}
++
++ echo Next-server: ${next-server}
++ echo Filename: ${filename}
++ echo DHCP Option 54: ${54}
++ echo DHCP Option 66: ${66}
++ echo DHCP Option 67: ${67}
++ echo ========================================================
++ autoboot || goto notfound
++
++:ipv6boot
++ clear ip6
++ ifconf --configurator ipv6
++ show ip6
++ isset ${net0.ndp.0/ip6:ipv6} || goto ipv6boot
++ echo ========================================================
++ echo UUID: ${uuid}
++ echo Manufacturer: ${manufacturer}
++ echo Product name: ${product}
++ echo Hostname: ${hostname}
++ echo
++ echo MAC address: ${net0/mac}
++ echo IP address: ${net0/ip}
++ echo IPv6 address: ${net0.ndp.0/ip6:ipv6}
++ echo Netmask: ${net0/netmask}
++ echo
++ echo Gateway: ${gateway}
++ echo DNS: ${dns}
++ echo IPv6 DNS: ${dns6}
++ echo Domain: ${domain}
++
++ echo Next-server: ${next-server}
++ echo Filename: ${filename}
++ echo DHCP Option 54: ${54}
++ echo DHCP Option 66: ${66}
++ echo DHCP Option 67: ${67}
++ echo ========================================================
++ autoboot || goto notfound
++
++:notfound
++  echo
++  echo Skipping to the next boot device according to the BIOS Boot Order.
++  chain --replace --autofree http://192.168.1.154:8000/raspi.ipxe || echo Failed to download override script; skipping
++  exit

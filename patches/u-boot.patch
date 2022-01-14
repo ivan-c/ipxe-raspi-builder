@@ -1,0 +1,26 @@
+Author: Ivan Cvitkovic <icvitkovic@gmail.com>
+Description: Fix Missing Interrupt Support
+ >iPXE by default will put the CPU to rest when waiting for input. U-Boot does not wake it up due to missing interrupt support
+ see https://github.com/u-boot/u-boot/blob/master/doc/uefi/iscsi.rst
+new file mode 100644
+--- /dev/null
++++ b/src/config/local/general.h
+@@ -0,0 +1,10 @@
++/* general.h */
++#define NSLOOKUP_CMD            /* Name resolution command */
++#define PING_CMD                /* Ping command */
++#define NTP_CMD                 /* NTP commands */
++#define VLAN_CMD                /* VLAN commands */
++#define IMAGE_EFI               /* EFI image support */
++#define DOWNLOAD_PROTO_HTTPS    /* Secure Hypertext Transfer Protocol */
++#define DOWNLOAD_PROTO_FTP      /* File Transfer Protocol */
++#define DOWNLOAD_PROTO_NFS      /* Network File System Protocol */
++#define DOWNLOAD_PROTO_FILE     /* Local file system access */
+new file mode 100644
+--- /dev/null
++++ b/src/config/local/nap.h
+@@ -0,0 +1,4 @@
++// see https://github.com/u-boot/u-boot/blob/master/doc/uefi/iscsi.rst
++#undef NAP_EFIX86
++#undef NAP_EFIARM
++#define NAP_NULL
