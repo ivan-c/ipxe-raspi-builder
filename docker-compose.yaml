@@ -1,0 +1,8 @@
+---
+version: "3.4"
+services:
+  ipxe:
+    build:
+      context: .
+    volumes:
+      - ./output:/opt/output
