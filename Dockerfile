@@ -19,7 +19,6 @@ RUN \
         git \
         quilt
 ENV \
-    CROSS_COMPILE=aarch64-linux-gnu- \
     QUILT_PATCHES=debian/patches
 
 COPY --from=ipxe_source /opt/ipxe /opt/ipxe
@@ -28,5 +27,5 @@ COPY patches /opt/ipxe/${QUILT_PATCHES}
 WORKDIR /opt/ipxe/src
 CMD \
     quilt push -a && \
-    make -j bin-arm64-efi/ipxe.efi EMBED=autoboot.ipxe && \
-    cp bin-arm64-efi/*.efi /opt/output
+    make -j  bin-x86_64-efi/ipxe.efi EMBED=autoboot.ipxe && \
+    cp bin-x86_64-efi/*.efi /opt/output
