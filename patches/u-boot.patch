@@ -24,3 +24,10 @@ new file mode 100644
 +#undef NAP_EFIX86
 +#undef NAP_EFIARM
 +#define NAP_NULL
+new file mode 100644
+--- /dev/null
++++ b/src/config/local/console.h
+@@ -0,0 +1,3 @@
++// see https://github.com/u-boot/u-boot/blob/master/doc/uefi/iscsi.rst
++
++#define CONSOLE_SYSLOG   CONSOLE_USAGE_LOG
